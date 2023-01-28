@@ -14,9 +14,13 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      default: "This is a description",
+    },
     condition: {
       type: String,
-      enum: ["draft", "pending", "approved"],
+      enum: ["draft", "pending", "approved", "declined"],
       default: "pending",
     },
     picturePath: String,

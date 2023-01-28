@@ -29,7 +29,7 @@ export const registerUser = async (req, res) => {
       const fileContent = fs.readFileSync(file.path);
       picturePath = new Buffer.from(fileContent).toString("base64");
     } else {
-      picturePath = "../Assets/Avatar.png";
+      picturePath = "p11.jpeg";
     }
 
     //hash the password
@@ -86,11 +86,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  //validate request
-  if (!email || !password) {
-    const msg = "please enter add email and password";
-    res.status(400).json(msg);
-  }
   // Check if user exists
   const user = await User.findOne({ email });
 
@@ -98,9 +93,17 @@ export const loginUser = async (req, res) => {
     const msg = "User with that email not found , please register";
     res.status(400).json(msg);
   }
-  // user exists, Check if the password is correct
-  const passwordCorrect = await bcrypt.compare(password, user.password);
+  //validate request
+  // if (!email || !password) {
+  //   const msg = "please enter add email and password";
+  //   res.status(400).json(msg);
+  // }
 
+  // user exists, Check if the password is correct
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    res.status(500).json({ message: `Invalid credentials` });
+  }
   //generate a token
   const token = generateToken(user._id);
 
@@ -113,8 +116,7 @@ export const loginUser = async (req, res) => {
     Secure: true,
   });
 
-  if (user && passwordCorrect) {
-    const user = req.body;
+  if (user && isMatch) {
     res.status(200).json({
       user, // you may display all the fields too
       token,
@@ -127,7 +129,7 @@ export const loginUser = async (req, res) => {
 
 //logoutUser
 export const logoutUser = async (req, res) => {
-  // you can either delete the cookie or expire the cookie, I will do exipirection
+  // you can either delete the cookie or expire the cookie, I will do expiration
 
   //send HTTP-only cookie
   res.cookie("token", "", {

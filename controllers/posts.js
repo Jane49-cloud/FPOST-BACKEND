@@ -16,9 +16,9 @@ export const createPost = async (req, res) => {
       const fileContent = fs.readFileSync(file.path);
       picturePath = new Buffer.from(fileContent).toString("base64");
     } else {
-      picturePath = "../Assets/Avatar.png";
+      picturePath = "No-Image.jpg";
     }
-    const post = await post.Create({
+    const post = await Post.create({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -28,9 +28,9 @@ export const createPost = async (req, res) => {
       likes: {},
       comments: [],
     });
-    const posts = await find();
+    // const posts = await find();
     res.status(201).json(post);
-    res.status(200).json(posts);
+    // res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -74,5 +74,35 @@ export const likePost = async (req, res) => {
     res.status(200).json(updatedPost);
   } catch (error) {
     res.status(404).json({ message: error.message });
+  }
+};
+
+export const approvedPosts = async (req, res) => {
+  try {
+    const post = await Post.find({ condition: "approved" });
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching approved posts" });
+  }
+};
+
+export const deniedPosts = async (req, res) => {
+  try {
+    const post = await Post.find({ condition: "denied" });
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching denied posts" });
+  }
+};
+
+export const pendingPosts = async (req, res) => {
+  try {
+    const post = await Post.find({ condition: "pending" });
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching approved posts" });
   }
 };
