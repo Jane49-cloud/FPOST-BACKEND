@@ -61,10 +61,11 @@ export const likePost = async (req, res) => {
     const post = await Post.findById(id);
     const isLiked = post.likes.get(userId);
     if (isLiked) {
-      posts.likes.delete(userId);
+      post.likes.delete(userId);
     } else {
-      posts.likes.set(userId, true);
+      post.likes.set(userId, true);
     }
+    console.log(userId, "this is actually a comment");
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
@@ -72,6 +73,7 @@ export const likePost = async (req, res) => {
       { new: true }
     );
     res.status(200).json(updatedPost);
+    console.log(userId, "this is actually a comment");
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
