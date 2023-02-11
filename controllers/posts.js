@@ -5,7 +5,7 @@ import fs from "fs";
 
 export const createPost = async (req, res) => {
   try {
-    const { userId, description } = req.body;
+    const { userId, description, content, title } = req.body;
     const user = await User.findById(userId);
 
     let picturePath = req.body.picturePath;
@@ -23,6 +23,8 @@ export const createPost = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       description,
+      content,
+      title,
       userPicturePath: user.picturePath,
       picturePath: picturePath,
       likes: {},
@@ -106,5 +108,19 @@ export const pendingPosts = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error fetching approved posts" });
+  }
+};
+
+export const userLikedPosts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const posts = await Post.find({ likes: { [userId]: true } });
+    const length = posts.length;
+    console.log(length);
+    res.status(200).json(posts);
+    console.log(`the user ${userId} liked posts`);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching user-liked posts" });
   }
 };

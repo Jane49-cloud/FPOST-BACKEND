@@ -155,7 +155,7 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getUsers = async (req, res) => {
-  const users = await User.find();
+export const getWriters = async (req, res) => {
+  const users = await User.find({ role: "writer" });
   res.status(200).json(users);
 };

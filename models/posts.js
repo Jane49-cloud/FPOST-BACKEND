@@ -14,9 +14,17 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      default: "This is the title",
+    },
     description: {
       type: String,
       default: "This is a description",
+    },
+    content: {
+      type: String,
+      default: "This is our content",
     },
     condition: {
       type: String,
