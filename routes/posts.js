@@ -7,6 +7,7 @@ import {
   deniedPosts,
   pendingPosts,
   userLikedPosts,
+  getPost,
 } from "../controllers/posts.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.get("/pending", pendingPosts);
 router.get("/:userId/liked", userLikedPosts);
 router.get("/:userId/posts", getUserPosts);
 router.patch("/:id/like", likePost);
+router.get("/:id", getPost);
 
 export default router;
