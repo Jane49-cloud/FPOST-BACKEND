@@ -127,10 +127,12 @@ export const pendingPosts = async (req, res) => {
 export const userLikedPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ likes: { [userId]: true } });
-    const length = posts.length;
-    console.log(length);
-    res.status(200).json(posts);
+    // const posts = await Post.find({ likes: { [userId]: true } });
+    const posts = await Post.find({});
+    const likedPosts = posts.filter((post) => post.likes.get(userId) === true);
+    // const length = posts.length;
+    // console.log(length);
+    res.status(200).json(likedPosts);
     console.log(`the user ${userId} liked posts`);
   } catch (error) {
     console.log(error);
