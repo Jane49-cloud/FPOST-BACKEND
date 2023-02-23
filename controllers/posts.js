@@ -139,3 +139,34 @@ export const userLikedPosts = async (req, res) => {
     res.status(500).json({ message: "Error fetching user-liked posts" });
   }
 };
+
+// add comments
+export const addCommentToPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId, text } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const newComment = {
+      author: user.firstName + " " + user.lastName,
+      photo: user.picturePath,
+      text,
+      createdAt: new Date(),
+    };
+
+    post.comments.push(newComment);
+    const updatedPost = await post.save();
+    console.log(newComment);
+    res.json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

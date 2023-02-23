@@ -13,7 +13,7 @@ import { fileURLToPath } from "url";
 import { registerUser } from "./controllers/user.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
-import { createPost } from "./controllers/posts.js";
+import { createPost, addCommentToPost } from "./controllers/posts.js";
 
 // configurations and middleware
 
@@ -46,6 +46,7 @@ const upload = multer({ storage });
 
 app.post("/auth/register", upload.single("picture"), registerUser);
 app.post("/posts/create", upload.single("picture"), createPost);
+app.patch("/posts/:postId/comment", upload.none(), addCommentToPost);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 

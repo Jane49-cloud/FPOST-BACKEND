@@ -8,6 +8,7 @@ import {
   pendingPosts,
   userLikedPosts,
   getPost,
+  addCommentToPost,
 } from "../controllers/posts.js";
 
 const router = express.Router();
@@ -20,5 +21,5 @@ router.get("/:userId/liked", userLikedPosts);
 router.get("/:userId/posts", getUserPosts);
 router.patch("/:id/like", likePost);
 router.get("/:id", getPost);
-
+// router.patch("/:id/comment", addCommentToPost);
 export default router;
