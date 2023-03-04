@@ -5,7 +5,7 @@ import fs from "fs";
 
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, content, title } = req.body;
+    const { userId, description, content, title, topic } = req.body;
     const user = await User.findById(userId);
 
     let picturePath = req.body.picturePath;
@@ -25,6 +25,7 @@ export const createPost = async (req, res) => {
       description,
       content,
       title,
+      topic,
       userPicturePath: user.picturePath,
       picturePath: picturePath,
       likes: {},
@@ -93,6 +94,41 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+export const editPost = async (req, res) => {
+  const { id } = req.params;
+  const { userId, description, content, title, topic } = req.body;
+
+  try {
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.userId !== userId) {
+      return res.status(401).json({ message: "Not authorized to edit post" });
+    }
+
+    let picturePath = post.picturePath;
+
+    if (req.file) {
+      const file = req.file;
+      const fileContent = fs.readFileSync(file.path);
+      picturePath = new Buffer.from(fileContent).toString("base64");
+    }
+
+    post.description = description;
+    post.content = content;
+    post.title = title;
+    post.topic = topic;
+    post.picturePath = picturePath;
+
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const approvedPosts = async (req, res) => {
   try {
@@ -155,6 +191,7 @@ export const addCommentToPost = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     const newComment = {
+      id: new Date(),
       author: user.firstName + " " + user.lastName,
       photo: user.picturePath,
       text,

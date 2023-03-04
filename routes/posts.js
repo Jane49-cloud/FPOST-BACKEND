@@ -9,6 +9,7 @@ import {
   userLikedPosts,
   getPost,
   addCommentToPost,
+  editPost,
 } from "../controllers/posts.js";
 
 const router = express.Router();
@@ -21,5 +22,6 @@ router.get("/:userId/liked", userLikedPosts);
 router.get("/:userId/posts", getUserPosts);
 router.patch("/:id/like", likePost);
 router.get("/:id", getPost);
+router.get("/:id", editPost);
 // router.patch("/:id/comment", addCommentToPost);
 export default router;

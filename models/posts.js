@@ -26,6 +26,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "This is our content",
     },
+    topic: {
+      type: String,
+      default: "",
+    },
     condition: {
       type: String,
       enum: ["draft", "pending", "approved", "declined"],
