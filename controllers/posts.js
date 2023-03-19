@@ -175,6 +175,22 @@ export const userLikedPosts = async (req, res) => {
     res.status(500).json({ message: "Error fetching user-liked posts" });
   }
 };
+export const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    await post.remove();
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // add comments
 export const addCommentToPost = async (req, res) => {
